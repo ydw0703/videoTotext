@@ -3,8 +3,10 @@ from PIL import Image
 import image_process as ct 
 import text_process as txt
 import datetime
+import numpy as np
 
-def extract_frame_from_video(video_path) :
+
+def extract_frame_from_video(video_path):
 	"""
 	비디오에서 1초당 하나의 프레임을 추출합니다.  
 
@@ -50,5 +52,6 @@ def save_image(image, path):
 
 if __name__ == "__main__":
 	pass
+
 
 

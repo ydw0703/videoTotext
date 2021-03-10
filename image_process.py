@@ -157,39 +157,39 @@ def get_contours(image):
 
 	return all_contour
 
-# def draw_contour_rect(image_origin, contours):
-# 	""" 사각형의 Contour 를 이미지 위에 그려서 반환합니다.
-#     찾은 Contours들의 영역을 감싸는 외각 사각형을 그립니다. 
-# 	섹션 - 빨간색 사각형, 나머지 - 초록색 사각형
+def draw_contour_rect(image_origin, contours):
+	""" 사각형의 Contour 를 이미지 위에 그려서 반환합니다.
+    찾은 Contours들의 영역을 감싸는 외각 사각형을 그립니다. 
+	섹션 - 빨간색 사각형, 나머지 - 초록색 사각형
 
-#     :param image_origin: OpenCV의 image 객체
-#     :param contours: 이미지 위에 그릴 contour 딕셔너리
-#     :return: 사각형의 Contour 를 그린 이미지
-#     """
-# 	rgb_copy = image_origin.copy()
-# 	draw_contour = contours["contours"]
-# 	draw_sectoin = contours["section"]
+    :param image_origin: OpenCV의 image 객체
+    :param contours: 이미지 위에 그릴 contour 딕셔너리
+    :return: 사각형의 Contour 를 그린 이미지
+    """
+	rgb_copy = image_origin.copy()
+	draw_contour = contours["contours"]
+	draw_sectoin = contours["section"]
 
-# 	min_width = config.IMAGE_CONFIG['contour']['min_width']
-# 	min_height = config.IMAGE_CONFIG['contour']['min_height']
+	min_width = config.IMAGE_CONFIG['contour']['min_width']
+	min_height = config.IMAGE_CONFIG['contour']['min_height']
 
-# 	if len(draw_contour) == 0:
-# 		# print('contours: 0')
-# 		return rgb_copy
-# 	else : 
-# 		for contour in draw_contour:
-# 			rect = cv2.minAreaRect(contour)
-# 			box = cv2.boxPoints(rect)
-# 			box = np.int0(box)
-# 			# print(box[0])
-# 			cv2.drawContours(rgb_copy, [box], 0, (0, 255, 0), 2)
-# 		if len(draw_sectoin) != 0:
-# 			rect = cv2.minAreaRect(draw_sectoin.pop())
-# 			box = cv2.boxPoints(rect)
-# 			box = np.int0(box)
-# 			cv2.drawContours(rgb_copy, [box], 0, (0, 0, 255), 2)
+	if len(draw_contour) == 0:
+		# print('contours: 0')
+		return rgb_copy
+	else : 
+		for contour in draw_contour:
+			rect = cv2.minAreaRect(contour)
+			box = cv2.boxPoints(rect)
+			box = np.int0(box)
+			# print(box[0])
+			cv2.drawContours(rgb_copy, [box], 0, (0, 255, 0), 2)
+		if len(draw_sectoin) != 0:
+			rect = cv2.minAreaRect(draw_sectoin.pop())
+			box = cv2.boxPoints(rect)
+			box = np.int0(box)
+			cv2.drawContours(rgb_copy, [box], 0, (0, 0, 255), 2)
 			
-# 	return rgb_copy
+	return rgb_copy
 
 
 def get_cropped_images(image_origin, contours):
@@ -229,7 +229,7 @@ def get_cropped_images(image_origin, contours):
 	if( len(draw_section) > 0 ):
 		x, y, width, height = cv2.boundingRect(draw_section.pop())
 		# area = cv2.contourArea(draw_section.pop())
-		if width*height > 2500 :
+		if width*height > 4000 :
 			cropped_section = image_copy[10: 84, 10: 350]
 		else: 
 			row_from = (y - padding) if (y - padding) > 0 else y
@@ -292,6 +292,57 @@ def image_all_process(imgae_file):
 
 	return final
 
-
 if __name__ == '__main__':
 	pass
+# def selectWords(image_gray):
+#     # org = cv2.imread('capture4.png', cv2.IMREAD_COLOR)
+#     org = image_gray
+    
+#     # org = cv2.resize(org, dsize=(0,0), fx=0.5, fy=0.5)
+#     gray = cv2.cvtColor(org, cv2.COLOR_BGR2GRAY)  # ================  1 gray scale로 변환
+
+#     kernel = np.ones((50, 2), np.uint8) #행,열의 사이즈
+#     # result = cv2.erode(org, kernel, iterations = 1)
+#     kernel2 = np.ones((5, 5), np.uint8) #행,열의 사이즈
+#     roi_list = []
+
+#     morph = cv2.morphologyEx(gray, cv2.MORPH_GRADIENT, kernel)  # 2 ================ 경계선 찾기
+
+#     thr = cv2.adaptiveThreshold(morph, 255, cv2.ADAPTIVE_THRESH_MEAN_C,  cv2.THRESH_BINARY_INV, 11, 20)  # 3 ================ 임계처리 
+
+#     morph2 = cv2.morphologyEx(thr, cv2.MORPH_CLOSE, kernel2)  # 4 ================ 뭉게기
+
+#     contours, _ = cv2.findContours(morph2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  # 5 ================ 특징점 찾기
+
+#     org2 = cv2.copyMakeBorder(org, 0, 0, 0, 0, cv2.BORDER_REPLICATE)
+#     for cnt in contours:
+#         try:
+#             x, y, w, h = cv2.boundingRect(cnt)
+#             if 50< w <200 and 85 < h < 200: # ============= 너비가 상수범위, 높이가 상수 범위인 값에 대하여
+#                 # print(w, h)
+#                 roi = org2[y:y + h, x:x + w]
+#                 # cv2.imshow('roi', roi)
+#                 roi_list.append(roi)
+#                 cv2.rectangle(org, (x, y), (x+w, y+h), (0, 0, 255), 2)
+
+#         except Exception as e:
+#            pass
+
+#     cnt = 0              # print all pieces
+#     '''for r in roi_list:
+#         cnt += 1
+#         cv2.imshow(str(cnt), r)'''
+#     org3 = cv2.resize(org, (960,540))
+#     # gray2 = cv2.resize(gray, (960,540))
+#     # morph3 = cv2.resize(morph, (960,540))
+#     morph4 = cv2.resize(morph2, (960,540))
+#     thr2 = cv2.resize(thr, (960,540))
+#     # result2 = cv2.resize(result, (960,540))
+#     # cv2.imshow('result',result2)
+#     cv2.imshow('org', org3)
+#     # cv2.imshow('gray', gray2)
+#     # cv2.imshow('morph', morph3)
+#     cv2.imshow('morph2', morph4)
+#     cv2.imshow('thr', thr2)
+
+#     return org, roi_list, gray, morph, morph2, thr

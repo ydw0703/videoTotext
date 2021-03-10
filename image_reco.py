@@ -5,6 +5,7 @@ import re
 import config
 import image_process as ip
 
+
 def extract_text(tmp_image):
 	""" 이미지에서 글자를 인식합니다. 
 	OCR엔진: tesseract (config에서 사용자 경로를 지정할 수 있습니다)
@@ -15,8 +16,8 @@ def extract_text(tmp_image):
 	if (len(tmp_image) == 0):
 		return ''
 
-	pytesseract.pytesseract.tesseract_cmd = config.RECO_CONFIG['tesseract']
-
+	# pytesseract.pytesseract.tesseract_cmd = config.RECO_CONFIG['tesseract']
+	pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files (x86)\\Tesseract-OCR\\tesseract.exe'
 	# image = cv2.imread(tmp_image)
 	# image = ip.resize(tmp_image)
 	# image = cv2.resize(tmp_image, dsize=(320, 240), interpolation=cv2.INTER_AREA)

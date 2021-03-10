@@ -3,7 +3,16 @@ import image_process as ct
 import image_reco as reco
 import text_process as txt
 import cv2
-
+import os
+ 
+def createFolder(directory):
+    try:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+    except OSError:
+        print ('Error: Creating directory. ' +  directory)
+ 
+createFolder('C:\\Users\\Administrator\Desktop\\2021_ICT\\test')
 
 def main():
 
@@ -11,12 +20,12 @@ def main():
     fianl_result_array=[]
     section_result_array=[]
 
-    video_path='test_video/jjan.mp4'
+    video_path='C:\\Users\\Administrator\\Desktop\\2021_ICT\\library_video2.mp4'
     # video에서 프레임 추출 
     frame_images = vp.extract_frame_from_video(video_path)
     # 추출된 프레임에서 글자 영역 찾기 
     for i, frame in enumerate(frame_images):
-        vp.save_image(ct.get_gray(frame),'new3/jjan/frames/frame_{}.jpg'.format(i))
+        vp.save_image(ct.get_gray(frame),'C:\\Users\\Administrator\\Desktop\\2021_ICT\\test\\frame_{}.jpg'.format(i))
         final_result=[]
         copy = ct.resize(frame)
         cropped_images=ct.image_all_process(copy)[1]
@@ -25,7 +34,7 @@ def main():
         # 자막들 
         for con in cropped_images["contours"]:
             # 프레임에서 추출한 영역들 저장 
-            ct.save_crooped_contours(con, 'new3/jjan/contours/contours_{}'.format(num))
+            ct.save_crooped_contours(con, 'C:\\Users\\Administrator\\Desktop\\2021_ICT\\test\\fcontours_{}'.format(num))
             # 영역들에서 글자 추출 
             result = reco.extract_text(con)
     #         # 추출된 글자 전처리 후 임시 보관 
@@ -39,7 +48,7 @@ def main():
 
         # 섹션 
         # 섹션 영역 저장 
-        ct.save_crooped_contours(cropped_images["section"], 'new3/jjan/section/section_{}'.format(i))
+        ct.save_crooped_contours(cropped_images["section"], 'C:\\Users\\Administrator\\Desktop\\2021_ICT\\test\\fsection_{}'.format(i))
         # 섹션에서 글자 추출 
         section = reco.extract_text(cropped_images["section"])
         # 추출된 글자 전처리 후 저장 
@@ -47,9 +56,10 @@ def main():
         # section_result_array.append(section)
 
     # 모든 결과 값들 저장 하기 
-    txt.text_save(fianl_result_array, section_result_array, 'output/jjan/new3_jjan.csv')
+    txt.text_save(fianl_result_array, section_result_array, 'C:\\Users\\Administrator\\Desktop\\2021_ICT\\test\\fnew3_jjan.csv')
 
 
 if __name__ == "__main__":
     main()
     # vision_test('output/frames/frame308.jpg')
+

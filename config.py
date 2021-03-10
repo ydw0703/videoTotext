@@ -6,8 +6,8 @@ IMAGE_CONFIG = {
 	},
 	"gradient": 
 	{
-		"kernel_size_row":3,
-		"kernel_size_col":3
+		"kernel_size_row":5,
+		"kernel_size_col":5
 	},
 	"threshold": 
 	{
